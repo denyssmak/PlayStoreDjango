@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if request.user.is_authenticated %}
+	<h2>{{ user }}</h2>
+	<a href="{% url 'logout_page' %}">logout</a><br>
+	<a href="{% url 'create_game' %}">create game</a><br>
+{% else %}
+	<a href="{% url 'login_page' %}">login</a><br>
+	<a href="{% url 'register_page' %}">reg</a><br>
+{% endif %}
+	{% for play in play_list %}
+		<p><a href="{% url 'Game' play.title %}">{{ play }}</p>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+{% block content %}
+	<h3>login</h3>
+<form method="post">
+	{% csrf_token %}
+	{{ form|safe }}
+	<button type='submit'>Зарегистрироваться</button>
+</form>
+
+{% endblock %}

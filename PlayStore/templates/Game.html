@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<img src="{{play.image.url}}" width="90px" height="90px"><br>
+    <h1>{{play.title}}<br></h1>
+    <h4>{{play.description}}<br></h4>
+    {{play.date_published}}<br>
+<button><a href="{% url 'comment_create' %}">Написать коментарий</a></button>
+{% endblock %}

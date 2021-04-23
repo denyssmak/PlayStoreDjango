@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+	<form method="post" >
+		<input type="hidden" name="plays" value="{{ plays.pk }}">
+		{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="Написать коментарий" >
+	</form>		
+{% endblock %}
