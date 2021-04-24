@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView , DetailView , View
-from .models import Play, MyUser, Comment
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView , DetailView , View, TemplateView
+from .models import Play, MyUser, Comment, Rating
 from django.utils import timezone
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, CreateGameForm, CommentCreateForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, CreateGameForm, CommentCreateForm, RatingPlayCreateForm
 from django.contrib.auth.views import LoginView, LogoutView
 
 
@@ -52,10 +52,12 @@ class ListPlayView(DetailView):
     template_name = 'Game.html'
     slug_url_kwarg = 'title'
     slug_field = 'title'
+    success_url = reverse_lazy('Game')
 
-class CommentPlayView(ListView):
+class CommentPlayView(TemplateView):
     model = Comment
     template_name = 'Game.html'
+
 
 class CommentCreatePlayView(CreateView):
     model = Comment
@@ -65,12 +67,30 @@ class CommentCreatePlayView(CreateView):
     def form_valid(self, form):
         object = form.save(commit=False)
         object.user = self.request.user
-        breakpoint()
-        pk = self.kwargs['plays']
+        pk = self.kwargs['pk']
         play = Play.objects.get(id=pk)
+        object.play = play
+        object.save()
         return super().form_valid(form=form)
 
-    # def post(self, request, *args, **kwargs):
-    #     pk = kwargs['plays']
-    #     play = Play.objects.get(id=pk)
-    #     return super().post(request, *args, **kwargs)
+    def get_success_url(self):
+        titles = self.object.play.title
+        return reverse('Game', kwargs={'title': titles})
+
+class RatingPlayCreateView(CreateView):
+    model = Rating
+    template_name = 'rating_create.html'
+    form_class = RatingPlayCreateForm
+
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.user = self.request.user
+        pk = self.kwargs['pk']
+        play = Play.objects.get(id=pk)
+        object.play = play
+        object.save()
+        return super().form_valid(form=form)
+
+    def get_success_url(self):
+        titles = self.object.play.title
+        return reverse('Game', kwargs={'title': titles})

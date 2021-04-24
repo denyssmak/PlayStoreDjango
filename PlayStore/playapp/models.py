@@ -12,14 +12,13 @@ IMPORTANCE_CHOICE = ((1, 1),
 class MyUser(AbstractUser):
     pass
 
-
 class Play(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='players')
     title = models.CharField(max_length=35)
     description = models.CharField(max_length=120)
     image = models.ImageField()
     date_published = models.DateField(auto_now=True)
-    ratings = GenericRelation('playapp.Rating')
+    
 
     def __str__(self):
         return f'{self.user} | {self.title} | {self.description} | {self.date_published}'
@@ -29,19 +28,19 @@ class Comment(models.Model):
     play = models.ForeignKey(Play, on_delete=models.CASCADE, related_name='plays')
     created_comment = models.DateField(auto_now=True)
     updated_comment = models.DateTimeField(auto_now_add=True)
-    ratings = GenericRelation('playapp.Rating')
     content = models.TextField()
 
     def __str__(self):
-        return f'{self.user} | {self.content} | {self.created_comment} | {self.updated_comment} '
+        return f'{self.user} | {self.content} | {self.created_comment} | {self.updated_comment}'
 
 
 class Rating(models.Model):
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='ratings')
-    appraisal = models.PositiveIntegerField(choices=IMPORTANCE_CHOICE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='user_rating')
+    play = models.ForeignKey(Play, on_delete=models.CASCADE, related_name='plays_rating')
+    rating = models.PositiveBigIntegerField(default=0, choices=IMPORTANCE_CHOICE)
+
+    def __str__(self):
+        return f'{self.user} | {self.play} | {self.rating}'
 
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, related_name='profile')

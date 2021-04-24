@@ -4,5 +4,13 @@
     <h1>{{play.title}}<br></h1>
     <h4>{{play.description}}<br></h4>
     {{play.date_published}}<br>
-<button><a href="{% url 'comment_create' %}">Написать коментарий</a></button>
+<button><a href="{% url 'comment_create' play.pk %}">Написать коментарий</a></button><br>
+{% for com in play.plays.all %}
+	{{com.user}} , {{com.content}} , {{com.created_comment}}<br> 
+{% endfor %}
+
+<button><a href="{% url 'rating_create' play.pk %}">Добавить рейтинг</a></button><br>
+{% for rating in play.plays_rating.all %}
+	{{rating.user}} , {{rating.rating}}<br>
+{% endfor %}
 {% endblock %}
