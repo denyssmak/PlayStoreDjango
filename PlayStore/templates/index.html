@@ -9,6 +9,6 @@
 	<a href="{% url 'register_page' %}">reg</a><br>
 {% endif %}
 	{% for play in play_list %}
-		<p><a href="{% url 'Game' play.title %}">{{ play }}</p>
+		<p><a href="{% url 'Game' play.title %}">{{play}}</p>
 	{% endfor %}
 {% endblock %}

@@ -18,6 +18,7 @@ class Play(models.Model):
     description = models.CharField(max_length=120)
     image = models.ImageField()
     date_published = models.DateField(auto_now=True)
+    download = models.FileField(upload_to='media')
     
 
     def __str__(self):

@@ -1,4 +1,6 @@
+import os
 from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView , DetailView , View, TemplateView
 from .models import Play, MyUser, Comment, Rating
 from django.utils import timezone
@@ -6,6 +8,8 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, CreateGameForm, CommentCreateForm, RatingPlayCreateForm
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import Avg
+from django.conf import settings
 
 
 class MainView(ListView):
@@ -41,10 +45,10 @@ class CreateGameView(CreateView):
         object.user = self.request.user
         return super().form_valid(form=form)
 
+
 class ListGameView(ListView):
     model = Play
     template_name = 'list_game.html'
-    success_url = reverse_lazy('index')
 
 
 class ListPlayView(DetailView):
@@ -52,7 +56,10 @@ class ListPlayView(DetailView):
     template_name = 'Game.html'
     slug_url_kwarg = 'title'
     slug_field = 'title'
-    success_url = reverse_lazy('Game')
+
+    def get_queryset(self):
+        return Play.objects.annotate(average_rating=Avg('plays_rating'))
+
 
 class CommentPlayView(TemplateView):
     model = Comment
@@ -94,3 +101,14 @@ class RatingPlayCreateView(CreateView):
     def get_success_url(self):
         titles = self.object.play.title
         return reverse('Game', kwargs={'title': titles})
+
+def download(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="plays/download")
+            response['Content-Disposition'] = 'inline; filename' + os.path.basename(file_path)
+            return response
+    
+    raise Http404
+

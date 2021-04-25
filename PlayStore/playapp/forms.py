@@ -18,7 +18,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 class CreateGameForm(forms.ModelForm):
     class Meta:
         model = Play
-        fields = ('title', 'description', 'image', )
+        fields = ('title', 'description', 'image', 'download', )
 
 class CommentCreateForm(forms.ModelForm):
     class Meta:
