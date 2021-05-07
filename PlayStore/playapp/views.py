@@ -2,19 +2,26 @@ import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView , DetailView , View, TemplateView
-from .models import Play, MyUser, Comment, Rating
+from .models import Play, MyUser, Comment, Rating, Profile
 from django.utils import timezone
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, CreateGameForm, CommentCreateForm, RatingPlayCreateForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, CreateGameForm, CommentCreateForm, RatingPlayCreateForm, TopRatingPlayGetForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from django.conf import settings
 
 
 class MainView(ListView):
     model = Play
     template_name = 'index.html'
+    extra_context = {'top': TopRatingPlayGetForm}
+    
+    def get_queryset(self):
+        if 'top' in self.request.GET:
+            return Play.objects.annotate(average_rating=Avg('plays_rating__rating')).order_by('-average_rating')
+        return Play.objects.annotate(average_rating=Avg('plays_rating__rating'))
+
 
 
 class RegisterUserView(CreateView):
@@ -58,7 +65,7 @@ class ListPlayView(DetailView):
     slug_field = 'title'
 
     def get_queryset(self):
-        return Play.objects.annotate(average_rating=Avg('plays_rating'))
+        return Play.objects.annotate(average_rating=Avg('plays_rating__rating'))
 
 
 class CommentPlayView(TemplateView):
@@ -111,4 +118,12 @@ def download(request, path):
             return response
     
     raise Http404
+
+class ProfileUserView(DetailView):
+    model = MyUser
+    template_name = 'profile.html'
+    slug_url_kwarg = 'username'
+    slug_field = 'username'
+
+
 

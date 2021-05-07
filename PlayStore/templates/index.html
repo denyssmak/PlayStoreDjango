@@ -2,13 +2,30 @@
 {% block content %}
 {% if request.user.is_authenticated %}
 	<h2>{{ user }}</h2>
+	<a href="{% url 'profile' user.username %}">Profile</a>
 	<a href="{% url 'logout_page' %}">logout</a><br>
 	<a href="{% url 'create_game' %}">create game</a><br>
 {% else %}
 	<a href="{% url 'login_page' %}">login</a><br>
 	<a href="{% url 'register_page' %}">reg</a><br>
 {% endif %}
+{% for top in top %}
+<form method="get">
+	<div>{{top}} Лучшиe Игры
+<input type="submit" value="OK">
+<input type="hidden" value="hidden">
+</form>
+</div>
+{% endfor %}
 	{% for play in play_list %}
-		<p><a href="{% url 'Game' play.title %}">{{play}}</p>
+		<div class='block'>
+			<a href="{% url 'Game' play.title %}"><img src="{{play.image.url}}" width="110px" height="110px"><br>
+			{{play.title}}</a>
+			{% if play.average_rating %}
+				<p>RATING:{{ play.average_rating|floatformat }}</p>
+			{% else %}
+				<p>RATING: 0</p>
+			{% endif %}
+		</div><br>
 	{% endfor %}
 {% endblock %}

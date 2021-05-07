@@ -29,3 +29,6 @@ class RatingPlayCreateForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ('rating',)
+
+class TopRatingPlayGetForm(forms.Form):
+    top = forms.BooleanField(required=False)

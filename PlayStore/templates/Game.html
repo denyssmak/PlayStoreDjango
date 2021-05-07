@@ -3,7 +3,11 @@
 <img src="{{play.image.url}}" width="90px" height="90px"><br>
     <h1>{{play.title}}<br></h1>
     <h4>{{play.description}}<br></h4>
-    <h5>RATING:{{ play.average_rating }}<br></h5>
+    {% if play.average_rating %}
+    	<h5>RATING:{{ play.average_rating|floatformat }}<br></h5>
+    {% else %}
+		<p>RATING: 0</p>
+	{% endif %}
      <a href="{{ play.download.url}}" download="{{ play.download.url}}">Download</a>
     {{play.date_published}}<br>
 <button><a href="{% url 'comment_create' play.pk %}">Написать коментарий</a></button><br>

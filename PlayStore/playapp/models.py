@@ -12,9 +12,12 @@ IMPORTANCE_CHOICE = ((1, 1),
 class MyUser(AbstractUser):
     pass
 
+    def __str__(self):
+        return self.username
+
 class Play(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='players')
-    title = models.CharField(max_length=35)
+    title = models.CharField(max_length=35, unique=True)
     description = models.CharField(max_length=120)
     image = models.ImageField()
     date_published = models.DateField(auto_now=True)
@@ -44,5 +47,8 @@ class Rating(models.Model):
         return f'{self.user} | {self.play} | {self.rating}'
 
 class Profile(models.Model):
-    user = models.OneToOneField(MyUser, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE, related_name='profiles')
+    description = models.CharField(max_length=250)
 
+    def __str__(self):
+        return f'{self.user} | {self.description}'
