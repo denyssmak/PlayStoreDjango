@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AbstractUser
 
+
 IMPORTANCE_CHOICE = ((1, 1),
                 (2, 2),
                 (3, 3),

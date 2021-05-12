@@ -1,5 +1,5 @@
 from django.urls import path, include
-from playapp.views import MainView, MyloginView, RegisterUserView, ListGameView, MyUserlogoutView, CreateGameView, ListPlayView, CommentCreatePlayView, RatingPlayCreateView, ProfileUserView                    
+from playapp.views import MainView, MyloginView, RegisterUserView, ListGameView, MyUserlogoutView, CreateGameView, ListPlayView, CommentCreatePlayView, RatingPlayCreateView, ProfileUserView, SearchResultsView                  
 import os
 from django.conf import settings
 from django.conf.urls.static import static
@@ -17,4 +17,5 @@ urlpatterns = [
     path('rating_create/<int:pk>/', RatingPlayCreateView.as_view(), name='rating_create'),
     path(r'^download/(?P<path>.*)$', serve, {'document_root':settings.MEDIA_ROOT}),
     path('profile/<str:username>/', ProfileUserView.as_view(), name='profile'),
+    path('search/', SearchResultsView.as_view(), name='search_results'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

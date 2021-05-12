@@ -32,3 +32,4 @@ class RatingPlayCreateForm(forms.ModelForm):
 
 class TopRatingPlayGetForm(forms.Form):
     top = forms.BooleanField(required=False)
+

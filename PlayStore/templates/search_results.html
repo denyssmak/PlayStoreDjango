@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% for top in top %}
+<form method="get">
+	<div>{{top}} Лучшиe Игры
+<input type="submit" value="OK">
+<input type="hidden" value="hidden">
+</form>
+</div>
+{% endfor %}
+	<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.83.1">
+    <title>Pricing example · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/pricing/">
+    
+
+    
+
+    <!-- Bootstrap core CSS -->
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      .mains{
+      	width: 100%;
+      	height: 100%;
+      	display: flex;
+      	justify-content: center;
+      	align-items: center;
+      }
+      .boxeds{
+      	width: 30px;
+      	height: 30px;
+      	border-radius: 50%;
+      	background: blue;
+      	position: relative;
+      }
+      .boxeds span{
+      	position: absolute;
+      	top: -100%;
+      	left: -105px;
+      	width: 800%;
+      	height: 80px;
+      	border: 4px solid #6495ed;
+      	border-radius: 50%;
+      	animation: anim 4s infinite;
+      }
+      .boxeds span:nth-child(1){
+      	transform: rotate(-60deg);
+      	animation: anim2 4s infinite;
+      }
+      .boxeds span:nth-child(2){
+      	transform: rotate(60deg);
+      	animation: anim3 4s infinite;
+      }
+      @keyframes anim{
+      	0%,100%{transform: rotate(0deg);}
+      	50%{transform: rotate(360deg);}
+      }
+      @keyframes anim2{
+      	0%,100%{transform: rotate(-60deg);}
+      	50%{transform: rotate(-300deg);}
+      }
+      @keyframes anim3{
+      	0%,100%{transform: rotate(60deg);}
+      	50%{transform: rotate(300deg);}
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="pricing.css" rel="stylesheet">
+
+  </head>
+  <body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="check" viewBox="0 0 16 16">
+    <title>Check</title>
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+  </symbol>
+</svg>
+
+<div class="container py-3">
+  <header>
+
+    <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+        <svg href="https://www.logowiks.com/wp-content/uploads/2016/04/wolf_2_drbl_teaser.jpg.pagespeed.ce.gLNb5eqVAj.jpg" width="40" height="32" class="me-2" viewBox="0 0 118 94" role="img"><title>Play Store</title><path fill-rule="evenodd" clip-rule="evenodd" d=https://www.logowiks.com/wp-content/uploads/2016/04/wolf_2_drbl_teaser.jpg.pagespeed.ce.gLNb5eqVAj.jpg fill="currentColor"></path></svg>
+      </a>
+
+
+    </div>
+    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+      <h1 class="display-4 fw-normal">Play</h1>
+      <p class="fs-5 text-muted">Welcome to the playstore here you can download games and much more for love taste.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    	 {% for play in play_list %}
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">{{play.title}}</h4>
+          </div>
+          <div class="card-body">
+           
+            <ul class="list-unstyled mt-3 mb-4">
+        <li>
+			<a href="{% url 'Game' play.title %}"><img src="{{play.image.url}}" width="135px" height="135px"><br>
+			{{play.title }}</a>
+			{% if play.average_rating %}
+				<p>RATING:{{ play.average_rating|floatformat }}</p>
+			{% else %}
+				<p>RATING: 0</p>
+			{% endif %}
+			<br>
+			
+		</li> 
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary"><a href="{% url 'Game' play.pk %}"></a>Download</button>
+          </div>
+        </div>
+      </div>
+      
+
+      {% endfor %}
+
+  </main>
+    {% if page_obj.paginator.num_pages > 1 %}
+        {% for num in page_obj.paginator.page_range %}
+            {% ifequal num page_obj.number %}
+            <span class="current"><b>{{ num }}</b></span>
+            {% else %}
+            <a href="?page={{ num }}"> {{ num }}</a>
+            {% endifequal %} 
+        {% endfor %}
+    {% endif %}
+
+
+
+        <div class="mains">
+    	<div class="boxeds">
+    	<span></span>
+    	<span></span>
+    	<span></span>
+    	</div>
+    </div>
+  </body>
+</html>
+
+{% endblock %}

@@ -18,11 +18,21 @@ class MainView(ListView):
     extra_context = {'top': TopRatingPlayGetForm}
     
     def get_queryset(self):
+        self.paginate_by = 9
         if 'top' in self.request.GET:
             return Play.objects.annotate(average_rating=Avg('plays_rating__rating')).order_by('-average_rating')
         return Play.objects.annotate(average_rating=Avg('plays_rating__rating'))
 
 
+class SearchResultsView(ListView):
+    model = Play
+    template_name = 'search_results.html'
+    def get_queryset(self): 
+        query = self.request.GET.get('q')
+        object_list = Play.objects.filter(
+            Q(title__icontains=query) 
+        )
+        return object_list
 
 class RegisterUserView(CreateView):
     model = MyUser
@@ -90,6 +100,7 @@ class CommentCreatePlayView(CreateView):
     def get_success_url(self):
         titles = self.object.play.title
         return reverse('Game', kwargs={'title': titles})
+
 
 class RatingPlayCreateView(CreateView):
     model = Rating
