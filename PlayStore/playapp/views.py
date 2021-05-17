@@ -127,7 +127,7 @@ def download(request, path):
             response = HttpResponse(fh.read(), content_type="plays/download")
             response['Content-Disposition'] = 'inline; filename' + os.path.basename(file_path)
             return response
-    
+  
     raise Http404
 
 class ProfileUserView(DetailView):

@@ -24,8 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q1xt9-vn()b4*!kclk1ylz!&h=z_o89n0ga^dmh_9618&n($lr'
-
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'n9ceqv38)#&mwuat@(mjb_p%em$e8$qyr#fw9ot!=ba6lijx-6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -77,11 +76,6 @@ WSGI_APPLICATION = 'PlayStore.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-if os.environ.get('PROD'):
-    try:
-        from .settings_prod import *
-    except ImportError:
-        pass
 
 
 DATABASES = {

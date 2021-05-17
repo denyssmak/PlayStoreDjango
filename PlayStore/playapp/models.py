@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AbstractUser
-
+import os
+from django.conf import settings
 
 IMPORTANCE_CHOICE = ((1, 1),
                 (2, 2),
@@ -23,7 +24,7 @@ class Play(models.Model):
     image = models.ImageField()
     date_published = models.DateField(auto_now=True)
     download = models.FileField(upload_to='media')
-    
+
 
     def __str__(self):
         return f'{self.user} | {self.title} | {self.description} | {self.date_published}'
