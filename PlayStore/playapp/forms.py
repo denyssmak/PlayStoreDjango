@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 
 
-
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = MyUser
@@ -16,23 +15,24 @@ class CustomAuthenticationForm(AuthenticationForm):
         model = MyUser
         fields = ('username', 'password')
 
+
 class CreateGameForm(forms.ModelForm):
     class Meta:
         model = Play
         fields = ('title', 'description', 'image', 'download', )
+
 
 class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('content',)
 
+
 class RatingPlayCreateForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ('rating',)
 
+
 class TopRatingPlayGetForm(forms.Form):
     top = forms.BooleanField(required=False)
-
-
-    

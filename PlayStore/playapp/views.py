@@ -1,7 +1,7 @@
 import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView , DetailView , View, TemplateView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View, TemplateView
 from .models import Play, MyUser, Comment, Rating, Profile
 from django.utils import timezone
 from django.urls import reverse_lazy, reverse
@@ -14,12 +14,11 @@ import requests
 from django.contrib import messages
 
 
-
 class MainView(ListView):
     model = Play
     template_name = 'index.html'
     extra_context = {'top': TopRatingPlayGetForm}
-    
+
     def get_queryset(self):
         self.paginate_by = 9
         if 'top' in self.request.GET:
@@ -30,13 +29,14 @@ class MainView(ListView):
 class SearchResultsView(ListView):
     model = Play
     template_name = 'search_results.html'
-    def get_queryset(self): 
+
+    def get_queryset(self):
         query = self.request.GET.get('q')
-        object_list = Play.objects.filter(
-            Q(title__icontains=query) 
+        object_list = Play.objects.annotate(average_rating=Avg('plays_rating__rating')).filter(
+            Q(title__icontains=query)
         )
         return object_list
-    
+
 
 def registerview(request):
     form = CustomUserCreationForm
@@ -48,29 +48,29 @@ def registerview(request):
                 'secret': settings.RECAPTCHA_PRIVATE_KEY,
                 'response': recaptcha_response
             }
-            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+            r = requests.post(
+                'https://www.google.com/recaptcha/api/siteverify', data=data)
             result = r.json()
             if result['success']:
-                # breakpoint()
                 user = form.save()
                 username = form.cleaned_data.get('username')
                 raw_password = form.cleaned_data.get('password1')
-                messages.success(request, username + 'welcome!')
+                messages.success(request, username)
                 user = authenticate(username=username, password=raw_password)
                 login(request, user)
                 return redirect('index')
             else:
                 messages.error(request,  'error!')
 
-    context =  {'form': form}
+    context = {'form': form}
     return render(request, 'register.html', context)
-
 
 
 class MyloginView(LoginView):
     template_name = 'login.html'
     form_class = CustomAuthenticationForm
     success_url = reverse_lazy('index')
+
     def get_success_url(self):
         return self.success_url
 
@@ -83,6 +83,7 @@ class CreateGameView(CreateView):
     template_name = 'create_game.html'
     form_class = CreateGameForm
     success_url = reverse_lazy('index')
+
     def form_valid(self, form):
         object = form.save(commit=False)
         object.user = self.request.user
@@ -146,20 +147,21 @@ class RatingPlayCreateView(CreateView):
         titles = self.object.play.title
         return reverse('Game', kwargs={'title': titles})
 
+
 def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="plays/download")
-            response['Content-Disposition'] = 'inline; filename' + os.path.basename(file_path)
+            response['Content-Disposition'] = 'inline; filename' + \
+                os.path.basename(file_path)
             return response
-  
+
     raise Http404
+
 
 class ProfileUserView(DetailView):
     model = MyUser
     template_name = 'profile.html'
     slug_url_kwarg = 'username'
     slug_field = 'username'
-
-
