@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'playapp',
+    'snowpenguin.django.recaptcha3',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 AUTH_USER_MODEL = 'playapp.MyUser'
+
+RECAPTCHA_PUBLIC_KEY = '6Lffb9saAAAAANGb9ukWoQkFu5-oRFsxFd022frd'
+RECAPTCHA_PRIVATE_KEY = '6Lffb9saAAAAAID1hspYXzYtWQ7v3rfbSB7TGrVn'
+RECAPTCHA_DEFAULT_ACTION = 'generic'
+RECAPTCHA_SCORE_THRESHOLD = 0.5

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from playapp.views import MainView, MyloginView, RegisterUserView, ListGameView, MyUserlogoutView, CreateGameView, ListPlayView, CommentCreatePlayView, RatingPlayCreateView, ProfileUserView, SearchResultsView                  
+from playapp.views import registerview, MainView, MyloginView, ListGameView, MyUserlogoutView, CreateGameView, ListPlayView, CommentCreatePlayView, RatingPlayCreateView, ProfileUserView, SearchResultsView                
 import os
 from django.conf import settings
 from django.conf.urls.static import static
@@ -8,7 +8,7 @@ from django.views.static import serve
 urlpatterns = [
     path('', MainView.as_view(), name='index'),
     path('login/', MyloginView.as_view(), name='login_page'),
-    path('register/', RegisterUserView.as_view(), name='register_page'),
+    path('register/', registerview, name='register_page'),
     path('logout/', MyUserlogoutView.as_view(), name='logout_page'),
     path('create_game/', CreateGameView.as_view(), name='create_game'),
     path('list_game/', ListGameView.as_view(), name='list_game'),

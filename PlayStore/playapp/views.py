@@ -10,6 +10,9 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm, CreateGameF
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import Avg, Q
 from django.conf import settings
+import requests
+from django.contrib import messages
+
 
 
 class MainView(ListView):
@@ -33,12 +36,35 @@ class SearchResultsView(ListView):
             Q(title__icontains=query) 
         )
         return object_list
+    
 
-class RegisterUserView(CreateView):
-    model = MyUser
-    form_class = CustomUserCreationForm
-    template_name = 'register.html'
-    success_url = reverse_lazy('index')
+def registerview(request):
+    form = CustomUserCreationForm
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            data = {
+                'secret': settings.RECAPTCHA_PRIVATE_KEY,
+                'response': recaptcha_response
+            }
+            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+            result = r.json()
+            if result['success']:
+                # breakpoint()
+                user = form.save()
+                username = form.cleaned_data.get('username')
+                raw_password = form.cleaned_data.get('password1')
+                messages.success(request, username + 'welcome!')
+                user = authenticate(username=username, password=raw_password)
+                login(request, user)
+                return redirect('index')
+            else:
+                messages.error(request,  'error!')
+
+    context =  {'form': form}
+    return render(request, 'register.html', context)
+
 
 
 class MyloginView(LoginView):
@@ -135,6 +161,5 @@ class ProfileUserView(DetailView):
     template_name = 'profile.html'
     slug_url_kwarg = 'username'
     slug_field = 'username'
-
 
 

@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 
 
+
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = MyUser
@@ -33,3 +34,5 @@ class RatingPlayCreateForm(forms.ModelForm):
 class TopRatingPlayGetForm(forms.Form):
     top = forms.BooleanField(required=False)
 
+
+    

@@ -115,6 +115,8 @@
       <h1 class="display-4 fw-normal">Play</h1>
       <p class="fs-5 text-muted">Welcome to the playstore here you can download games and much more for love taste.</p>
     </div>
+
+</div>
   </header>
 
   <main>
@@ -135,7 +137,7 @@
 			{% if play.average_rating %}
 				<p>RATING:{{ play.average_rating|floatformat }}</p>
 			{% else %}
-				<p>RATING: 0</p>
+				<p>RATING:0</p>
 			{% endif %}
 			{{play.download.size|filesizeformat}}
 			<br>
